@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { computed, onBeforeUnmount, watch } from "vue";
 import { resourcesApi } from "@/api/index.js";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import PreviewNotice from "@/components/files/PreviewNotice.vue";
@@ -80,6 +80,9 @@ const pdfConvertable = computed(() => {
 const isHeicAndViewable = computed(() => state.isSafari || Boolean(state.req?.hasPreview));
 
 const showImage = computed(() => {
+  if (getters.fileViewingDisabled(state.req.name ?? "")) {
+    return false;
+  }
   if (state.req.type === "image/heic" || state.req.type === "image/heif") {
     return isHeicAndViewable.value;
   }
@@ -140,19 +143,29 @@ const downloadUrl = computed(() => {
   return resourcesApi.getDownloadURL(state.req.source, state.req.path);
 });
 
+let loadOwner = 0;
+
 async function loadPreviewForReq() {
   if (!getters.isLoggedIn() && !getters.isShare()) {
     return;
   }
+  const owner = ++loadOwner;
   const path = state.req.path;
   await loadListingContext();
 
-  if (state.req.path !== path) {
+  if (owner !== loadOwner || state.req.path !== path) {
     return;
   }
   await updatePreview();
+  if (owner !== loadOwner) {
+    return;
+  }
   selectCurrentItem();
 }
+
+onBeforeUnmount(() => {
+  loadOwner += 1;
+});
 
 watch(
   () => state.req,
