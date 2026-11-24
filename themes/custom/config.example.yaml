@@ -1,0 +1,35 @@
+# Beispiel-Ausschnitt für die config.yaml von FileBrowser Quantum.
+# Nur den Block unter `frontend.styling` übernehmen.
+#
+# Pfade zu CSS-Dateien werden vom Backend per os.ReadFile gelesen:
+#   - relative Pfade gelten ab dem Arbeitsverzeichnis des Prozesses
+#     (Docker-Image: meist /home/filebrowser), NICHT ab der config.yaml
+#   - sicherer sind absolute Pfade, z. B. in Docker per Volume eingebunden
+# Die Datei wird nur beim Start gelesen → nach Änderungen neu starten.
+# Ist die Datei nicht lesbar, leer oder > 128 KB, wird das Theme mit einer
+# Warnung im Log übersprungen (es erscheint dann nicht in der Auswahl).
+
+frontend:
+  styling:
+    # Hintergrundfarben, die schon im <head> greifen (verhindert Aufblitzen
+    # beim Laden). Sollten zu --background im Theme passen.
+    lightBackground: "#f5f5f5"
+    darkBackground: "#141d24"
+
+    # Option A: Theme für ALLE Nutzer erzwingen (wird immer geladen)
+    # customCSS: "/home/filebrowser/themes/custom/theme.css"
+
+    # Option B: Theme zur Auswahl anbieten (Profil → Einstellungen → Theme).
+    # Der Schlüssel "default" ist die Voreinstellung für neue Nutzer;
+    # css: "" bedeutet Standard-Aussehen.
+    customThemes:
+      default:
+        description: "Standard"
+        css: ""
+      custom:
+        description: "Custom Theme"
+        css: "/home/filebrowser/themes/custom/theme.css"
+
+# Docker-Beispiel (docker-compose.yaml):
+#   volumes:
+#     - ./themes:/home/filebrowser/themes:ro

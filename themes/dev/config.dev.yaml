@@ -1,0 +1,26 @@
+http:
+  port: 8090
+server:
+  sources:
+    - path: "./files"
+      config:
+        defaultEnabled: true
+auth:
+  methods:
+    password:
+      enabled: true
+      adminUsername: admin
+      adminPassword: admin1234
+      minLength: 5
+userDefaults:
+  ui:
+    customTheme: "custom"
+frontend:
+  styling:
+    customThemes:
+      default:
+        description: "Standard"
+        css: ""
+      custom:
+        description: "Custom Theme"
+        css: "../custom/theme.css"

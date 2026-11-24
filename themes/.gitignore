@@ -1,0 +1,6 @@
+# Laufzeitdateien der lokalen Testinstanz
+dev/files/
+dev/tmp/
+dev/*.sqlite*
+dev/shots/
+dev/filebrowser
