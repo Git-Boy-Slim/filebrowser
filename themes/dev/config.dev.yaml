@@ -22,7 +22,7 @@ frontend:
     customCSS: "../cupertino/login.css"
     customThemes:
       default:
-        description: "Standard"
+        description: "Default"
         css: ""
       cupertino:
         description: "Cupertino (macOS / iOS)"

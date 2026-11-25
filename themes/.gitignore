@@ -1,4 +1,4 @@
-# Laufzeitdateien der lokalen Testinstanz
+# Runtime files of the local test instance
 dev/files/
 dev/tmp/
 dev/*.sqlite*

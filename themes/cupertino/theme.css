@@ -1,30 +1,30 @@
 /*
- * Cupertino – ein FileBrowser-Quantum-Theme nach den Apple Human Interface Guidelines
+ * Cupertino – a FileBrowser Quantum theme following Apple's Human Interface Guidelines
  * ------------------------------------------------------------------------------------
- * Wird in <style id="user-selected-theme"> am Ende von <body> geladen und gewinnt
- * dadurch bei gleicher Spezifität. Wo die App scoped Styles (Vue) oder !important
- * nutzt, sind die Selektoren mit `html` bzw. !important verstärkt.
+ * Loaded into <style id="user-selected-theme"> at the end of <body>, so it wins at
+ * equal specificity. Where the app uses scoped (Vue) styles or !important, selectors
+ * are strengthened with `html` or !important.
  *
- * Hell/Dunkel: über die Klasse .dark-mode auf <html> – wechselt live.
- * Akzentfarbe: Die Farbauswahl im Profil setzt --primaryColor inline auf <html>
- * (z. B. "var(--blue)"). Das Theme definiert die sechs Auswahlfarben als
- * Apple-Systemfarben um; Ordner, Schalter, Auswahl und Buttons folgen automatisch.
- * Eine eigene Hex-Farbe funktioniert ebenfalls (Ordnerfarben werden dann gemischt).
+ * Light/dark: via the .dark-mode class on <html> – switches live.
+ * Accent color: the color picker in the profile sets --primaryColor inline on <html>
+ * (e.g. "var(--blue)"). The theme redefines the six picker colors as Apple system
+ * colors; folders, switches, selection and buttons follow automatically.
+ * A custom hex color works as well (folder colors are then mixed from it).
  *
- * Gliederung
- *   1  Tokens (hell / dunkel)            7  Kachel- & Symbolansicht (Finder)
- *   2  Grundlagen & Typografie           8  Mobil (Grouped Tables)
- *   3  Hover / Buttons / Eingaben        9  Ordner- & Dateisymbole
- *   4  Fenster-Chrome (Header, Sidebar) 10  Scrollbar
- *   5  Dateiansicht allgemein           11  Einstellungen (iOS-Settings)
- *   6  Liste & Kompakt (Grouped Tables) 12  Dialoge, Menüs, Barrierefreiheit
+ * Contents
+ *   1  Tokens (light / dark)             7  Gallery & icons view (Finder)
+ *   2  Base & typography                 8  Mobile (grouped tables)
+ *   3  Hover / buttons / inputs          9  Folder & file icons
+ *   4  Window chrome (header, sidebar)  10  Scrollbar
+ *   5  File listing, general            11  Settings (iOS Settings style)
+ *   6  List & compact (grouped tables)  12  Dialogs, menus, accessibility
  */
 
 /* ================================================================== */
 /* 1  Tokens                                                           */
 /* ================================================================== */
 :root {
-  /* Apple-Systemfarben (hell) – zugleich die Optionen der Farbauswahl */
+  /* Apple system colors (light) – also the options of the accent color picker */
   --blue: #007aff;
   --dark-blue: #0062cc;
   --red: #ff3b30;
@@ -38,11 +38,11 @@
   --icon-blue: #007aff;
   --primaryColor: var(--blue);
 
-  /* Flächen */
-  --background: #f5f5f7;          /* Fenster / gruppierter Hintergrund */
-  --alt-background: #ececef;      /* Seitenleiste, Kopfzeile */
-  --surfacePrimary: #ffffff;      /* Zellen, Karten */
-  --surfaceSecondary: #e8e8ed;    /* neutrale Buttons */
+  /* Surfaces */
+  --background: #f5f5f7;          /* window / grouped background */
+  --alt-background: #ececef;      /* sidebar, header */
+  --surfacePrimary: #ffffff;      /* cells, cards */
+  --surfaceSecondary: #e8e8ed;    /* neutral buttons */
   --iconBackground: #e8e8ed;
 
   /* Text */
@@ -50,7 +50,7 @@
   --textSecondary: #6e6e73;
   --activeWhiteIcon: #6e6e73;
 
-  /* Linien & Zustände */
+  /* Lines & states */
   --divider: rgb(60 60 67 / 16%);
   --hoverOverlay: rgb(0 0 0 / 4%);
   --overlay: rgb(0 0 0 / 20%);
@@ -65,7 +65,7 @@
   --panel-bg: color-mix(in srgb, var(--alt-background) 74%, transparent);
   --panel-blur: blur(24px) saturate(180%);
 
-  /* Theme-eigene Tokens */
+  /* Theme-specific tokens */
   --cu-cell: #ffffff;
   --cu-separator: rgb(60 60 67 / 14%);
   --cu-fill: rgb(120 120 128 / 12%);
@@ -130,13 +130,13 @@
   --cu-letter-shadow: 0 0 6px var(--background), 0 0 14px var(--background), 0 2px 8px rgb(0 0 0 / 70%);
 }
 
-/* Haarlinien auf hochauflösenden Displays */
+/* Hairlines on high-density displays */
 @media (resolution >= 2dppx) {
   :root { --cu-hairline: 0.5px; }
 }
 
-/* Ordnerfarben je Akzent (Vorderseite / Rückwand).
- * Ohne Treffer (eigene Hex-Farbe) wird aus --primaryColor gemischt. */
+/* Folder colors per accent (front / back).
+ * Without a match (custom hex color) they are mixed from --primaryColor. */
 :root {
   --cu-folder-front: color-mix(in oklab, var(--primaryColor) 72%, white);
   --cu-folder-back: color-mix(in oklab, var(--primaryColor) 86%, black);
@@ -149,7 +149,7 @@
 :root[style*="var(--icon-orange)"] { --cu-folder-front: #ffb04f; --cu-folder-back: #ea8500; }
 
 /* ================================================================== */
-/* 2  Grundlagen & Typografie                                          */
+/* 2  Base & typography                                                */
 /* ================================================================== */
 html,
 body,
@@ -172,11 +172,11 @@ body {
 }
 
 /* ================================================================== */
-/* 3  Hover, Buttons, Eingaben                                         */
+/* 3  Hover, buttons, inputs                                           */
 /* ================================================================== */
 
-/* Die App legt auf alles Klickbare einen Verlauf + scale(1.02). Apple-Controls
- * reagieren beim Drücken, nicht beim Überfahren – also weg damit. */
+/* The app puts a gradient + scale(1.02) on everything clickable. Apple controls
+ * respond to pressing, not hovering – so remove it. */
 html .clickable:hover,
 html .plyr .plyr__control:hover,
 html button:hover,
@@ -199,7 +199,7 @@ html .action:not(:disabled):active {
   background-color: var(--cu-fill);
 }
 
-/* Gefüllter Button (Primäraktion) */
+/* Filled button (primary action) */
 html .button {
   border-radius: 8px;
   font-weight: 500;
@@ -212,7 +212,7 @@ html .button:not(:disabled):active {
   filter: brightness(0.88);
 }
 
-/* Neutraler / flacher Button */
+/* Neutral / flat button */
 html button {
   background-color: var(--cu-fill);
   color: var(--textPrimary);
@@ -247,7 +247,7 @@ html .listing-item:focus-visible {
   outline-offset: 1px;
 }
 
-/* Textfelder */
+/* Text fields */
 html .input,
 html input[type="text"],
 html input[type="password"],
@@ -275,7 +275,7 @@ html select:focus {
 }
 
 /* ================================================================== */
-/* 4  Fenster-Chrome: Kopfzeile, Statusleiste, Seitenleiste            */
+/* 4  Window chrome: header, status bar, sidebar                      */
 /* ================================================================== */
 html header.flexbar,
 html #status-bar {
@@ -301,7 +301,7 @@ html header title {
   letter-spacing: -0.01em;
 }
 
-/* Suchfeld im Stil eines macOS/iOS-Suchfelds */
+/* Search field styled like a macOS/iOS search field */
 html #search #input,
 html #search .search-bar,
 html #search > div:first-child {
@@ -314,7 +314,7 @@ html #search-input {
   box-shadow: none;
 }
 
-/* Seitenleiste wie in Finder: Material, keine Karten */
+/* Sidebar like Finder: material, no cards */
 html nav#sidebar {
   background: var(--panel-bg);
   backdrop-filter: var(--panel-blur);
@@ -344,7 +344,7 @@ html nav#sidebar .sidebar-links-header .action {
   color: var(--primaryColor);
 }
 
-/* Schnellschalter (Klickmodus, Dunkelmodus, Sidebar anheften) */
+/* Quick toggles (click mode, dark mode, pin sidebar) */
 html nav#sidebar .quick-toggles > div {
   background: var(--cu-fill);
   transition: background-color 0.2s var(--cu-ease);
@@ -358,7 +358,7 @@ html nav#sidebar .quick-toggles > div:not(.active) i {
   color: var(--textPrimary);
 }
 
-/* Speicheranzeige der Quelle */
+/* Source storage usage */
 html nav#sidebar .vue-simple-progress {
   border: 0 !important;
   background: var(--cu-fill) !important;
@@ -373,10 +373,10 @@ html nav#sidebar .credits a {
 }
 
 /* ================================================================== */
-/* 5  Dateiansicht allgemein                                           */
+/* 5  File listing, general                                           */
 /* ================================================================== */
 
-/* Abschnittsüberschriften „Ordner“ / „Dateien“ wie in iOS-Tabellen */
+/* Section headers "Folders" / "Files" like in iOS tables */
 html .listing-items h2 {
   margin: 0.9em 0 0.35em;
   padding: 0 1rem;
@@ -387,7 +387,7 @@ html .listing-items h2 {
   color: var(--textSecondary);
 }
 
-/* Sortierzeile */
+/* Sort header */
 html .listing-item-header.card {
   background: transparent;
   border: 0;
@@ -403,7 +403,7 @@ html .listing-item-header .active {
   color: var(--textPrimary);
 }
 
-/* Auswahlrahmen der App ersetzen wir durch Flächenfarbe */
+/* Replace the app's selection border with a fill color */
 html .listing-items .listing-item::before {
   border-width: 0 !important;
 }
@@ -422,7 +422,7 @@ html .listing-items .listing-item :is(.size, .modified, .created, .kind, .durati
   color: var(--textSecondary);
 }
 
-/* Auswahlrechteck (Aufziehen mit der Maus) */
+/* Selection rectangle (drag with the mouse) */
 html .listing-items .selection-rectangle {
   background: color-mix(in srgb, var(--primaryColor) 14%, transparent);
   border: 1px solid color-mix(in srgb, var(--primaryColor) 60%, transparent);
@@ -430,7 +430,7 @@ html .listing-items .selection-rectangle {
   box-shadow: none;
 }
 
-/* Symbolbox entfernen – Icons stehen frei */
+/* Remove the icon box – icons stand on their own */
 html .listing-items .image-preview,
 html .search-entry .image-preview {
   background: transparent;
@@ -438,13 +438,13 @@ html .search-entry .image-preview {
   container-type: size;
 }
 
-/* Vorschaubilder: leicht gerundet, feiner Rand */
+/* Thumbnails: slightly rounded, fine border */
 html .listing-items .image-preview img {
   border-radius: 4px;
   box-shadow: 0 0 0 var(--cu-hairline) rgb(0 0 0 / 12%), 0 1px 3px rgb(0 0 0 / 12%);
 }
 
-/* Kleine Overlay-Symbole (geteilt, animiert) als Badge */
+/* Small overlay icons (shared, animated) as a badge */
 html .listing-items .overlay-icon {
   font-size: 0.85rem !important;
   padding: 2px;
@@ -454,7 +454,7 @@ html .listing-items .overlay-icon {
   box-shadow: 0 0.5px 2px rgb(0 0 0 / 25%);
 }
 
-/* NORMAL (Desktop): freistehende Kacheln, Rand erst bei Auswahl */
+/* NORMAL (desktop): free-standing tiles, outline only when selected */
 html .listing-items.normal {
   --icon-size: 2.75em;
 }
@@ -495,7 +495,7 @@ html .listing-items.normal .listing-item[aria-selected="true"] :is(.size, .modif
 }
 
 /* ================================================================== */
-/* 6  Liste & Kompakt: Grouped Tables (iOS) / Tabellen (macOS)         */
+/* 6  List & compact: grouped tables (iOS) / tables (macOS)          */
 /* ================================================================== */
 html .listing-items.list { --icon-size: 1.9em; }
 html .listing-items.compact { --icon-size: 1.45em; }
@@ -525,7 +525,7 @@ html .listing-items:is(.list, .compact) .listing-item.zebra-row:not([aria-select
 html .listing-items.list .listing-item { min-height: 2.75rem; }
 html .listing-items.compact .listing-item { min-height: 2rem; }
 
-/* Inset-Trennlinien ab der Textkante */
+/* Inset separators starting at the text edge */
 html .listing-items:is(.list, .compact) .listing-item::after {
   content: "";
   position: absolute;
@@ -566,7 +566,7 @@ html .listing-items:is(.list, .compact) .listing-item :is(.size, .modified, .cre
 }
 
 /* ================================================================== */
-/* 7  Kachel- & Symbolansicht: wie Finder                              */
+/* 7  Gallery & icons view: like Finder                               */
 /* ================================================================== */
 html .listing-items:is(.gallery, .icons) .listing-item {
   background: transparent !important;
@@ -619,7 +619,7 @@ html .listing-items:is(.gallery, .icons) .listing-item .text .name span {
   vertical-align: top;
 }
 
-/* Finder-Auswahl: graue Fläche hinter dem Symbol, Akzent-Pille um den Namen */
+/* Finder selection: gray fill behind the icon, accent pill around the name */
 html .listing-items:is(.gallery, .icons) .listing-item[aria-selected="true"] .image-preview {
   background: var(--cu-select-gray);
 }
@@ -634,7 +634,7 @@ html .listing-items:is(.gallery, .icons) .listing-item[aria-selected="true"] {
 }
 
 /* ================================================================== */
-/* 8  Mobil: Kacheln werden zur gruppierten Liste (iOS-Dateien-App)    */
+/* 8  Mobile: tiles become a grouped list (iOS Files app)            */
 /* ================================================================== */
 @media (width <= 768px) {
   html .listing-items.normal > :is(.folder-items, .file-items, .pinned-items) {
@@ -687,13 +687,13 @@ html .listing-items:is(.gallery, .icons) .listing-item[aria-selected="true"] {
 }
 
 /* ================================================================== */
-/* 9  Ordner- & Dateisymbole                                           */
+/* 9  Folder & file icons                                             */
 /* ================================================================== */
 
-/* --- Ordner ------------------------------------------------------- */
-/* Zwei maskierte Ebenen, damit die Farbe aus der Akzentfarbe kommt:
- *   ::before  Rückwand mit Reiter
- *   ::after   Papierkante + Vorderseite (harter Verlauf: weiß → Ordnerfarbe) */
+/* --- Folders ------------------------------------------------------ */
+/* Two masked layers so the color can come from the accent color:
+ *   ::before  back with tab
+ *   ::after   paper edge + front (hard-stop gradient: white → folder color) */
 html .listing-item[data-dir="true"] .image-preview > img,
 html .listing-item[data-dir="true"] .image-preview > i:not(.overlay-icon),
 html .listing-item[data-dir="true"] .image-preview:has(> img) > .overlay-icon:first-child,
@@ -739,8 +739,8 @@ html .listing-item[data-dir="true"] .image-preview::after {
   -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M11 25.5c0-1.1.9-2 2-2h74c1.1 0 2 .9 2 2V34H11Z'/><path d='M2.5 36c0-3.3 2.7-6 6-6h83c3.3 0 6 2.7 6 6v48.5c0 3.3-2.7 6-6 6h-83c-3.3 0-6-2.7-6-6Z'/></svg>");
 }
 
-/* --- Dateien ohne Vorschaubild ------------------------------------ */
-/* ::before der Box = Blatt mit Eselsohr, i::before = Glyphe, i::after = Endung */
+/* --- Files without a thumbnail ------------------------------------ */
+/* box ::before = page with folded corner, i::before = glyph, i::after = extension */
 html .listing-item[data-dir="false"] .image-preview:not(:has(img))::before {
   content: "";
   position: absolute;
@@ -791,7 +791,7 @@ html .listing-item[data-dir="false"] .image-preview:not(:has(img)) > i:not(.over
   white-space: nowrap;
 }
 
-/* In schmalen Listen ist die Endung unlesbar → nur die (größere) Glyphe zeigen */
+/* In narrow lists the extension is unreadable → show only the (larger) glyph */
 @container (max-width: 44px) {
   .listing-item[data-dir="false"] .image-preview > i:not(.overlay-icon)::after {
     display: none;
@@ -804,9 +804,9 @@ html .listing-item[data-dir="false"] .image-preview:not(:has(img)) > i:not(.over
   }
 }
 
-/* --- Glyphen nach Typ (MIME aus data-type) ------------------------ */
+/* --- Glyphs by type (MIME from data-type) ------------------------- */
 .listing-item[data-dir="false"] {
-  /* Standard: Textzeilen */
+  /* Default: lines of text */
   --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'><path d='M4 6h16M4 10h16M4 14h16M4 18h10'/></svg>");
 }
 
@@ -859,7 +859,7 @@ html .listing-item[data-dir="false"] .image-preview:not(:has(img)) > i:not(.over
   --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8'><rect x='3' y='3' width='18' height='18' rx='5'/><path d='M3 8h18'/></svg>");
 }
 
-/* --- Dateiendung als Beschriftung -------------------------------- */
+/* --- File extension as label ------------------------------------- */
 .listing-item[data-name$=".pdf" i] { --cu-ext: "PDF"; }
 .listing-item[data-name$=".txt" i] { --cu-ext: "TXT"; }
 .listing-item[data-name$=".md" i] { --cu-ext: "MD"; }
@@ -935,7 +935,7 @@ html .listing-item[data-dir="false"] .image-preview:not(:has(img)) > i:not(.over
 /* ================================================================== */
 /* 10  Scrollbar                                                       */
 /* ================================================================== */
-/* Schmale Overlay-Scrollbar wie in macOS; Abschnittsbuchstabe frei schwebend */
+/* Thin overlay scrollbar like macOS; section letter floats freely */
 html .custom-scrollbar .thumb {
   width: 7px;
   height: 4.5em;
@@ -977,10 +977,10 @@ html .custom-scrollbar .thumb-section-id {
 }
 
 /* ================================================================== */
-/* 11  Einstellungen im Stil der iOS-Einstellungen                     */
+/* 11  Settings in the style of iOS Settings                          */
 /* ================================================================== */
 
-/* --- Navigation (Seitenleiste nach Klick aufs Zahnrad) ------------ */
+/* --- Navigation (sidebar after clicking the gear) ----------------- */
 html nav#sidebar .settings-card,
 html nav#sidebar .settings-card-collapsible {
   margin: 0 !important;
@@ -1014,7 +1014,7 @@ html nav#sidebar .settings-card-collapsible-sub-item {
   font-size: 0.95rem;
 }
 
-/* Trennlinien zwischen den Zeilen, eingerückt ab dem Text */
+/* Separators between rows, inset from the text */
 html nav#sidebar :is(.settings-card, .settings-card-collapsible):not(:nth-last-child(1 of .card))::after {
   content: "";
   position: absolute;
@@ -1025,7 +1025,7 @@ html nav#sidebar :is(.settings-card, .settings-card-collapsible):not(:nth-last-c
   background: var(--cu-separator);
 }
 
-/* Farbige Symbol-Kacheln wie in iOS */
+/* Colored icon tiles like in iOS */
 html nav#sidebar .settings-icon {
   --cu-tile: #8e8e93;
 
@@ -1056,7 +1056,7 @@ html nav#sidebar .settings-item-content {
   color: var(--textPrimary);
 }
 
-/* Chevron rechts wie in iOS-Tabellen */
+/* Chevron on the right like in iOS tables */
 html nav#sidebar .settings-card:not(.settings-card-collapsible-header)::before {
   content: "";
   position: absolute;
@@ -1084,7 +1084,7 @@ html nav#sidebar .settings-card-collapsible-chevron {
   opacity: 0.6;
 }
 
-/* Unterpunkte: eingerückt, ohne Symbol */
+/* Sub-items: indented */
 html nav#sidebar .settings-card-collapsible-sub-item {
   padding-left: 3.1rem !important;
   min-height: 2.4rem !important;
@@ -1092,7 +1092,7 @@ html nav#sidebar .settings-card-collapsible-sub-item {
   border-top: var(--cu-hairline) solid var(--cu-separator);
 }
 
-/* Aktiver Eintrag: Akzentfläche wie in der iPad-Seitenleiste */
+/* Active item: accent fill like the iPad sidebar */
 html nav#sidebar .active-settings,
 html nav#sidebar .settings-card.active-settings {
   background: var(--primaryColor) !important;
@@ -1111,7 +1111,7 @@ html nav#sidebar .settings-card:hover:not(.active-settings) {
   background: color-mix(in srgb, var(--cu-cell) 92%, var(--textPrimary)) !important;
 }
 
-/* --- Inhalt: eine große Liste aus gruppierten Tabellen ------------ */
+/* --- Content: one long list of grouped tables --------------------- */
 html .settings-views,
 html .dashboard {
   max-width: 46rem;
@@ -1138,7 +1138,7 @@ html .dashboard > .card {
   border: 0;
 }
 
-/* Akkordeon auflösen: alle Abschnitte offen, Titel = Abschnittsüberschrift */
+/* Dissolve the accordion: all sections open, title = section header */
 html .settings-accordion .settings-content {
   display: block !important;
   height: auto !important;
@@ -1168,7 +1168,7 @@ html .settings-group-title .collapse-icon {
   display: none;
 }
 
-/* Abschnittsüberschriften der einzelnen Felder */
+/* Section headers of individual fields */
 html .settings-views h4,
 html .preference-field-block > h4,
 html .profile-enforceable-field__value > h4 {
@@ -1186,7 +1186,7 @@ html .settings-views .settings-items h3 {
   font-weight: 400;
 }
 
-/* Zellen */
+/* Cells */
 html .settings-views .settings-items {
   gap: 0;
 }
@@ -1204,7 +1204,7 @@ html .settings-views .settings-items > .profile-enforceable-field > .profile-enf
   position: relative;
 }
 
-/* Gruppengrenzen: erste/letzte Zelle einer zusammenhängenden Folge runden */
+/* Group edges: round the first/last cell of a contiguous run */
 html .settings-views .settings-items > :is(.item, .toggle-container):not(:is(.item, .toggle-container) + *) {
   border-top-left-radius: var(--cu-radius-lg) !important;
   border-top-right-radius: var(--cu-radius-lg) !important;
@@ -1236,7 +1236,7 @@ html .settings-views .tooltip-info-icon {
   font-size: 1.05rem !important;
 }
 
-/* Auswahlfelder (Dropdowns) als Zelle mit Chevron */
+/* Select fields (dropdowns) as a cell with chevron */
 html .settings-views .expand-dropdown-anchor.menu-panel {
   background: var(--cu-cell) !important;
   border: 0 !important;
@@ -1253,7 +1253,7 @@ html .settings-views .expand-dropdown-chevron {
   color: var(--textSecondary);
 }
 
-/* Segmented Control (z. B. Akzentfarbe) */
+/* Segmented control (e.g. accent color) */
 html .button-group {
   background: var(--cu-fill) !important;
   border: 0 !important;
@@ -1280,7 +1280,7 @@ html .button-group button.active {
   box-shadow: 0 3px 8px rgb(0 0 0 / 12%), 0 3px 1px rgb(0 0 0 / 4%), 0 0 0 0.5px rgb(0 0 0 / 4%) !important;
 }
 
-/* Farbpunkte vor den Namen der Akzentfarben */
+/* Color dots before the accent color names */
 html .theme-color-group .button-group button::before {
   content: "";
   width: 0.7em;
@@ -1299,7 +1299,7 @@ html .theme-color-group .button-group button:nth-child(4) { --cu-swatch: var(--i
 html .theme-color-group .button-group button:nth-child(5) { --cu-swatch: var(--icon-yellow); }
 html .theme-color-group .button-group button:nth-child(6) { --cu-swatch: var(--icon-orange); }
 
-/* --- Schalter (UISwitch / NSSwitch) ------------------------------- */
+/* --- Switches (UISwitch / NSSwitch) ------------------------------- */
 html label.switch:not(.switch--icon-mode) {
   width: 51px;
   height: 31px;
@@ -1340,7 +1340,7 @@ html label.switch:not(.switch--icon-mode) input:disabled + .slider {
   opacity: 0.45;
 }
 
-/* Icon-Schalter (Seitenleiste: Ordner/Links) */
+/* Icon switch (sidebar: folders/links) */
 html .switch--icon-mode .slider {
   background: var(--cu-fill) !important;
 }
@@ -1350,7 +1350,7 @@ html .switch--icon-mode .slider-knob {
 }
 
 /* ================================================================== */
-/* 12  Dialoge, Menüs, Barrierefreiheit                                */
+/* 12  Dialogs, menus, accessibility                                  */
 /* ================================================================== */
 html .card {
   border-radius: var(--cu-radius-lg);

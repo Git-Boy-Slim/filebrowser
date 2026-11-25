@@ -1,39 +1,63 @@
-# Beispiel-Ausschnitt für die config.yaml von FileBrowser Quantum.
-# Nur den Block unter `frontend.styling` (und optional userDefaults) übernehmen.
+# Example snippet for the FileBrowser Quantum config.yaml.
+# Copy the `frontend.styling` block (and optionally `userDefaults`).
 #
-# Pfade werden vom Backend per os.ReadFile gelesen:
-#   - relative Pfade gelten ab dem Arbeitsverzeichnis des Prozesses
-#     (Docker-Image: /home/filebrowser), NICHT ab der config.yaml
-#   - absolute Pfade sind am robustesten (in Docker per Volume einbinden)
-# Die Dateien werden nur beim Start gelesen → nach Änderungen neu starten.
-# Ist eine Datei nicht lesbar, leer oder > 128 KB, wird sie mit einer Warnung
-# im Log übersprungen.
+# How CSS paths are resolved:
+#   - The backend reads the files with os.ReadFile at startup.
+#   - Relative paths are resolved from the process's WORKING DIRECTORY,
+#     not from the location of config.yaml. If you start FileBrowser from
+#     the directory that contains config.yaml (e.g. `cd` into it first),
+#     both are the same and "./..." paths work as expected.
+#   - Changes to the CSS files only take effect after a restart.
+#   - A file that is missing, empty or larger than 128 KB is skipped with a
+#     warning in the log ("could not read custom CSS file: ...").
+
+# ---------------------------------------------------------------------------
+# Variant A – plain binary, themes synced with git next to config.yaml
+# ---------------------------------------------------------------------------
+# Layout (example):
+#   ~/.config/filebrowser-quantum/
+#   ├── config.yaml
+#   └── git/                      <- sparse checkout of this repository
+#       └── themes/cupertino/...
+#
+# FileBrowser is started from ~/.config/filebrowser-quantum, so paths are
+# relative to that directory.
 
 frontend:
   styling:
-    # Passend zu --background des Themes; verhindert helles/dunkles Aufblitzen
+    # Match the theme's --background to avoid a light/dark flash while loading
     lightBackground: "#f5f5f7"
     darkBackground: "#18181a"
 
-    # Login-Seite: dort ist noch kein Nutzer bekannt, darum lädt die App kein
-    # Nutzer-Theme. login.css wirkt nur innerhalb von #login und lässt andere
-    # Themes unberührt – kann also dauerhaft gesetzt bleiben.
-    customCSS: "/home/filebrowser/themes/cupertino/login.css"
+    # Login page: no user is known there yet, so the app cannot load a user
+    # theme. login.css only applies inside #login and does not affect the app
+    # or other themes, so it can stay enabled permanently.
+    customCSS: "./git/themes/cupertino/login.css"
 
-    # Auswählbare Themes (Profil → Theme & Language → „Choose your theme“).
+    # Selectable themes (Profile → Theme & Language → "Choose your theme").
     customThemes:
       default:
-        description: "Standard"
+        description: "Default"
         css: ""
       cupertino:
         description: "Cupertino (macOS / iOS)"
-        css: "/home/filebrowser/themes/cupertino/theme.css"
+        css: "./git/themes/cupertino/theme.css"
 
-# Optional: Cupertino als Voreinstellung für neue Nutzer
+# Optional: make Cupertino the default for new users
 userDefaults:
   ui:
     customTheme: "cupertino"
 
-# Docker-Beispiel (docker-compose.yaml):
-#   volumes:
-#     - ./themes:/home/filebrowser/themes:ro
+# ---------------------------------------------------------------------------
+# Variant B – Docker
+# ---------------------------------------------------------------------------
+# The official image runs in /home/filebrowser. Mount the themes folder and use
+# absolute paths:
+#
+#   docker-compose.yaml:
+#     volumes:
+#       - ./themes:/home/filebrowser/themes:ro
+#
+#   config.yaml:
+#     customCSS: "/home/filebrowser/themes/cupertino/login.css"
+#     css:       "/home/filebrowser/themes/cupertino/theme.css"

@@ -1,9 +1,9 @@
-// Nutzung: node themes/dev/shot.js <ausgabeOrdner> [themeCss] [loginCss] [nur=name,name]
-// Loggt sich als admin/admin1234 ein und speichert Screenshots aller wichtigen
-// Ansichten (hell + dunkel, Desktop + Mobil). Ist themeCss angegeben, wird die
-// Datei direkt in <style id="user-selected-theme"> injiziert – so sieht man
-// Änderungen ohne Server-Neustart. loginCss wird zusätzlich auf jeder Seite
-// injiziert (entspricht customCSS).
+// Usage: node themes/dev/shot.js <outDir> [themeCss|-] [loginCss|-] [only=name,name]
+// Logs in as admin/admin1234 (local test instance only) and saves screenshots
+// of all important views (light + dark, desktop + mobile). If themeCss is
+// given, the file is injected straight into <style id="user-selected-theme"> –
+// so changes show up without restarting the server. loginCss is injected on
+// every page as well (equivalent to customCSS).
 const fs = require('fs');
 const { chromium } = require('playwright');
 const [out = '.', themeFile, loginFile, onlyArg] = process.argv.slice(2);
@@ -41,7 +41,7 @@ async function patchUser(page, data) {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ which: Object.keys(d), data: d }),
     });
-    // Die App cached den Modus pro Nutzer in localStorage
+    // The app caches the view mode per user in localStorage
     for (const k of Object.keys(localStorage)) {
       if (k.startsWith('ViewMode_') && d.viewMode) localStorage.setItem(k, d.viewMode);
       if (k.startsWith('GallerySize_') && d.gallerySize) localStorage.setItem(k, String(d.gallerySize));
@@ -94,7 +94,7 @@ async function snap(page, name, url, opts = {}) {
   await snap(page, 'settings-profile', '/settings#profile-main', { full: false });
   await snap(page, 'settings-profile-full', '/settings#profile-main', { full: true, modes: ['light'] });
 
-  // Mobil
+  // Mobile
   const mctx = await browser.newContext({ ...require('playwright').devices['iPhone 13'] });
   await mctx.addCookies(await ctx.cookies());
   const m = await mctx.newPage();
