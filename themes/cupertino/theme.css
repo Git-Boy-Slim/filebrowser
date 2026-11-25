@@ -1,0 +1,1399 @@
+/*
+ * Cupertino – ein FileBrowser-Quantum-Theme nach den Apple Human Interface Guidelines
+ * ------------------------------------------------------------------------------------
+ * Wird in <style id="user-selected-theme"> am Ende von <body> geladen und gewinnt
+ * dadurch bei gleicher Spezifität. Wo die App scoped Styles (Vue) oder !important
+ * nutzt, sind die Selektoren mit `html` bzw. !important verstärkt.
+ *
+ * Hell/Dunkel: über die Klasse .dark-mode auf <html> – wechselt live.
+ * Akzentfarbe: Die Farbauswahl im Profil setzt --primaryColor inline auf <html>
+ * (z. B. "var(--blue)"). Das Theme definiert die sechs Auswahlfarben als
+ * Apple-Systemfarben um; Ordner, Schalter, Auswahl und Buttons folgen automatisch.
+ * Eine eigene Hex-Farbe funktioniert ebenfalls (Ordnerfarben werden dann gemischt).
+ *
+ * Gliederung
+ *   1  Tokens (hell / dunkel)            7  Kachel- & Symbolansicht (Finder)
+ *   2  Grundlagen & Typografie           8  Mobil (Grouped Tables)
+ *   3  Hover / Buttons / Eingaben        9  Ordner- & Dateisymbole
+ *   4  Fenster-Chrome (Header, Sidebar) 10  Scrollbar
+ *   5  Dateiansicht allgemein           11  Einstellungen (iOS-Settings)
+ *   6  Liste & Kompakt (Grouped Tables) 12  Dialoge, Menüs, Barrierefreiheit
+ */
+
+/* ================================================================== */
+/* 1  Tokens                                                           */
+/* ================================================================== */
+:root {
+  /* Apple-Systemfarben (hell) – zugleich die Optionen der Farbauswahl */
+  --blue: #007aff;
+  --dark-blue: #0062cc;
+  --red: #ff3b30;
+  --dark-red: #d70015;
+  --errorColor: #ff3b30;
+  --icon-green: #34c759;
+  --icon-violet: #af52de;
+  --icon-yellow: #ffcc00;
+  --icon-orange: #ff9500;
+  --icon-red: #ff3b30;
+  --icon-blue: #007aff;
+  --primaryColor: var(--blue);
+
+  /* Flächen */
+  --background: #f5f5f7;          /* Fenster / gruppierter Hintergrund */
+  --alt-background: #ececef;      /* Seitenleiste, Kopfzeile */
+  --surfacePrimary: #ffffff;      /* Zellen, Karten */
+  --surfaceSecondary: #e8e8ed;    /* neutrale Buttons */
+  --iconBackground: #e8e8ed;
+
+  /* Text */
+  --textPrimary: #1d1d1f;
+  --textSecondary: #6e6e73;
+  --activeWhiteIcon: #6e6e73;
+
+  /* Linien & Zustände */
+  --divider: rgb(60 60 67 / 16%);
+  --hoverOverlay: rgb(0 0 0 / 4%);
+  --overlay: rgb(0 0 0 / 20%);
+
+  /* Form */
+  --borderRadius: 10px;
+  --borderWidth: 1px;
+  --surfaceElevationShadow:
+    0 0 0 0.5px rgb(0 0 0 / 6%),
+    0 2px 6px rgb(0 0 0 / 6%),
+    0 10px 30px rgb(0 0 0 / 8%);
+  --panel-bg: color-mix(in srgb, var(--alt-background) 74%, transparent);
+  --panel-blur: blur(24px) saturate(180%);
+
+  /* Theme-eigene Tokens */
+  --cu-cell: #ffffff;
+  --cu-separator: rgb(60 60 67 / 14%);
+  --cu-fill: rgb(120 120 128 / 12%);
+  --cu-fill-strong: rgb(120 120 128 / 20%);
+  --cu-hover: rgb(0 0 0 / 4%);
+  --cu-select-gray: rgb(0 0 0 / 7%);
+  --cu-segment-active: #ffffff;
+  --cu-switch-off: rgb(120 120 128 / 16%);
+  --cu-glyph: #a1a1a6;
+  --cu-scroll-thumb: rgb(0 0 0 / 32%);
+  --cu-letter-shadow: 0 0 6px var(--background), 0 0 14px var(--background), 0 2px 6px rgb(0 0 0 / 22%);
+  --cu-hairline: 1px;
+  --cu-radius-sm: 6px;
+  --cu-radius-lg: 12px;
+  --cu-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --cu-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Inter",
+    "Segoe UI Variable", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+:root.dark-mode {
+  --blue: #0a84ff;
+  --dark-blue: #0071e3;
+  --red: #ff453a;
+  --dark-red: #ff6961;
+  --errorColor: #ff453a;
+  --icon-green: #30d158;
+  --icon-violet: #bf5af2;
+  --icon-yellow: #ffd60a;
+  --icon-orange: #ff9f0a;
+  --icon-red: #ff453a;
+  --icon-blue: #0a84ff;
+
+  --background: #18181a;
+  --alt-background: #222224;
+  --surfacePrimary: #262628;
+  --surfaceSecondary: #333336;
+  --iconBackground: #2c2c2e;
+
+  --textPrimary: #f5f5f7;
+  --textSecondary: #98989d;
+  --activeWhiteIcon: #f5f5f7;
+
+  --divider: rgb(84 84 88 / 55%);
+  --hoverOverlay: rgb(255 255 255 / 6%);
+  --overlay: rgb(0 0 0 / 50%);
+
+  --surfaceElevationShadow:
+    0 0 0 0.5px rgb(255 255 255 / 8%),
+    0 2px 6px rgb(0 0 0 / 30%),
+    0 12px 36px rgb(0 0 0 / 40%);
+
+  --cu-cell: #262628;
+  --cu-separator: rgb(84 84 88 / 48%);
+  --cu-fill: rgb(120 120 128 / 24%);
+  --cu-fill-strong: rgb(120 120 128 / 36%);
+  --cu-hover: rgb(255 255 255 / 5%);
+  --cu-select-gray: rgb(255 255 255 / 10%);
+  --cu-segment-active: #636366;
+  --cu-switch-off: rgb(120 120 128 / 32%);
+  --cu-glyph: #9a9aa0;
+  --cu-scroll-thumb: rgb(255 255 255 / 34%);
+  --cu-letter-shadow: 0 0 6px var(--background), 0 0 14px var(--background), 0 2px 8px rgb(0 0 0 / 70%);
+}
+
+/* Haarlinien auf hochauflösenden Displays */
+@media (resolution >= 2dppx) {
+  :root { --cu-hairline: 0.5px; }
+}
+
+/* Ordnerfarben je Akzent (Vorderseite / Rückwand).
+ * Ohne Treffer (eigene Hex-Farbe) wird aus --primaryColor gemischt. */
+:root {
+  --cu-folder-front: color-mix(in oklab, var(--primaryColor) 72%, white);
+  --cu-folder-back: color-mix(in oklab, var(--primaryColor) 86%, black);
+}
+:root[style*="var(--blue)"]        { --cu-folder-front: #6ccdfb; --cu-folder-back: #1b93d8; }
+:root[style*="var(--red)"]         { --cu-folder-front: #f0675f; --cu-folder-back: #cf3a31; }
+:root[style*="var(--icon-green)"]  { --cu-folder-front: #62cf6f; --cu-folder-back: #2f9f43; }
+:root[style*="var(--icon-violet)"] { --cu-folder-front: #c690e9; --cu-folder-back: #9550c4; }
+:root[style*="var(--icon-yellow)"] { --cu-folder-front: #ffd950; --cu-folder-back: #e2ad00; }
+:root[style*="var(--icon-orange)"] { --cu-folder-front: #ffb04f; --cu-folder-back: #ea8500; }
+
+/* ================================================================== */
+/* 2  Grundlagen & Typografie                                          */
+/* ================================================================== */
+html,
+body,
+input,
+button,
+select,
+textarea {
+  font-family: var(--cu-font);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizelegibility;
+  color: var(--textPrimary);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primaryColor) 30%, transparent);
+}
+
+/* ================================================================== */
+/* 3  Hover, Buttons, Eingaben                                         */
+/* ================================================================== */
+
+/* Die App legt auf alles Klickbare einen Verlauf + scale(1.02). Apple-Controls
+ * reagieren beim Drücken, nicht beim Überfahren – also weg damit. */
+html .clickable:hover,
+html .plyr .plyr__control:hover,
+html button:hover,
+html .action:hover,
+html .listing-item.drag-hover {
+  box-shadow: none !important;
+  transform: none;
+}
+
+html .action:not(:disabled):hover {
+  background-color: var(--cu-hover);
+}
+
+html .action,
+html .action i {
+  border-radius: var(--cu-radius-sm);
+}
+
+html .action:not(:disabled):active {
+  background-color: var(--cu-fill);
+}
+
+/* Gefüllter Button (Primäraktion) */
+html .button {
+  border-radius: 8px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  box-shadow: 0 0.5px 1px rgb(0 0 0 / 12%);
+  transition: filter 0.12s var(--cu-ease), opacity 0.12s var(--cu-ease), background-color 0.2s var(--cu-ease);
+}
+
+html .button:not(:disabled):active {
+  filter: brightness(0.88);
+}
+
+/* Neutraler / flacher Button */
+html button {
+  background-color: var(--cu-fill);
+  color: var(--textPrimary);
+  border-radius: 8px;
+  transition: background-color 0.15s var(--cu-ease), opacity 0.12s var(--cu-ease);
+}
+
+html button:not(:disabled):active {
+  background-color: var(--cu-fill-strong);
+}
+
+html .button--flat {
+  text-transform: none;
+  background: transparent;
+  box-shadow: none;
+  color: var(--primaryColor);
+  font-weight: 500;
+}
+
+html .button--flat:not(:disabled):hover {
+  background: var(--cu-hover);
+}
+
+html .button--flat.button--red { color: var(--red); }
+html .button--flat.button--grey { color: var(--textSecondary); }
+
+html button:focus-visible,
+html .button:focus-visible,
+html .action:focus-visible,
+html .listing-item:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primaryColor) 45%, transparent);
+  outline-offset: 1px;
+}
+
+/* Textfelder */
+html .input,
+html input[type="text"],
+html input[type="password"],
+html input[type="search"],
+html input[type="number"],
+html input[type="email"],
+html input[type="url"],
+html textarea,
+html select {
+  background: var(--cu-cell);
+  color: var(--textPrimary);
+  border: var(--cu-hairline) solid var(--cu-fill-strong);
+  border-radius: 7px;
+  box-shadow: none;
+  transition: border-color 0.15s var(--cu-ease), box-shadow 0.15s var(--cu-ease);
+}
+
+html .input:focus,
+html input:focus,
+html textarea:focus,
+html select:focus {
+  border-color: var(--primaryColor);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primaryColor) 32%, transparent);
+  outline: none;
+}
+
+/* ================================================================== */
+/* 4  Fenster-Chrome: Kopfzeile, Statusleiste, Seitenleiste            */
+/* ================================================================== */
+html header.flexbar,
+html #status-bar {
+  background: var(--panel-bg);
+  backdrop-filter: var(--panel-blur);
+  -webkit-backdrop-filter: var(--panel-blur);
+  box-shadow: none;
+}
+
+html header.flexbar {
+  border-bottom: var(--cu-hairline) solid var(--cu-separator);
+}
+
+html #status-bar {
+  border-top: var(--cu-hairline) solid var(--cu-separator);
+  font-size: 0.8rem;
+  color: var(--textSecondary);
+}
+
+html header .topTitle,
+html header title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Suchfeld im Stil eines macOS/iOS-Suchfelds */
+html #search #input,
+html #search .search-bar,
+html #search > div:first-child {
+  border-radius: 10px;
+}
+
+html #search-input {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Seitenleiste wie in Finder: Material, keine Karten */
+html nav#sidebar {
+  background: var(--panel-bg);
+  backdrop-filter: var(--panel-blur);
+  -webkit-backdrop-filter: var(--panel-blur);
+  border-right: var(--cu-hairline) solid var(--cu-separator);
+  box-shadow: none;
+}
+
+html nav#sidebar .card {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+}
+
+html nav#sidebar .sidebar-link-button,
+html nav#sidebar .source-button {
+  border-radius: 8px;
+}
+
+html nav#sidebar .sidebar-link-button.active,
+html nav#sidebar .source-button.active {
+  background: var(--cu-select-gray);
+}
+
+html nav#sidebar .link-icon,
+html nav#sidebar .sidebar-links-header .action {
+  color: var(--primaryColor);
+}
+
+/* Schnellschalter (Klickmodus, Dunkelmodus, Sidebar anheften) */
+html nav#sidebar .quick-toggles > div {
+  background: var(--cu-fill);
+  transition: background-color 0.2s var(--cu-ease);
+}
+
+html nav#sidebar .quick-toggles > div.active {
+  background: var(--primaryColor);
+}
+
+html nav#sidebar .quick-toggles > div:not(.active) i {
+  color: var(--textPrimary);
+}
+
+/* Speicheranzeige der Quelle */
+html nav#sidebar .vue-simple-progress {
+  border: 0 !important;
+  background: var(--cu-fill) !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+html nav#sidebar .credits,
+html nav#sidebar .credits a {
+  color: var(--textSecondary);
+  font-size: 0.8rem;
+}
+
+/* ================================================================== */
+/* 5  Dateiansicht allgemein                                           */
+/* ================================================================== */
+
+/* Abschnittsüberschriften „Ordner“ / „Dateien“ wie in iOS-Tabellen */
+html .listing-items h2 {
+  margin: 0.9em 0 0.35em;
+  padding: 0 1rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--textSecondary);
+}
+
+/* Sortierzeile */
+html .listing-item-header.card {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--textSecondary);
+  border-bottom: var(--cu-hairline) solid var(--cu-separator);
+  border-radius: 0;
+}
+
+html .listing-item-header .active {
+  color: var(--textPrimary);
+}
+
+/* Auswahlrahmen der App ersetzen wir durch Flächenfarbe */
+html .listing-items .listing-item::before {
+  border-width: 0 !important;
+}
+
+html .listing-items .listing-item {
+  color: var(--textPrimary);
+  transition: background-color 0.12s var(--cu-ease), color 0.12s var(--cu-ease);
+}
+
+html .listing-items .listing-item .name {
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+html .listing-items .listing-item :is(.size, .modified, .created, .kind, .duration) {
+  color: var(--textSecondary);
+}
+
+/* Auswahlrechteck (Aufziehen mit der Maus) */
+html .listing-items .selection-rectangle {
+  background: color-mix(in srgb, var(--primaryColor) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primaryColor) 60%, transparent);
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+/* Symbolbox entfernen – Icons stehen frei */
+html .listing-items .image-preview,
+html .search-entry .image-preview {
+  background: transparent;
+  border-radius: 0;
+  container-type: size;
+}
+
+/* Vorschaubilder: leicht gerundet, feiner Rand */
+html .listing-items .image-preview img {
+  border-radius: 4px;
+  box-shadow: 0 0 0 var(--cu-hairline) rgb(0 0 0 / 12%), 0 1px 3px rgb(0 0 0 / 12%);
+}
+
+/* Kleine Overlay-Symbole (geteilt, animiert) als Badge */
+html .listing-items .overlay-icon {
+  font-size: 0.85rem !important;
+  padding: 2px;
+  border-radius: 50%;
+  background: var(--cu-cell);
+  color: var(--textSecondary);
+  box-shadow: 0 0.5px 2px rgb(0 0 0 / 25%);
+}
+
+/* NORMAL (Desktop): freistehende Kacheln, Rand erst bei Auswahl */
+html .listing-items.normal {
+  --icon-size: 2.75em;
+}
+
+html .listing-items.normal .listing-item {
+  background: transparent;
+  box-shadow: none;
+  border: 1px solid transparent !important;
+  margin: 1px;
+  padding: 0.4em 0.6em;
+  border-radius: var(--borderRadius);
+}
+
+html .listing-items.normal .listing-item .text {
+  padding-left: 0.7em;
+}
+
+html .listing-items.normal .listing-item .name {
+  font-size: 0.92rem;
+}
+
+html .listing-items.normal .listing-item :is(.size, .modified) {
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+html .listing-items.normal .listing-item:hover {
+  background: var(--cu-hover);
+}
+
+html .listing-items.normal .listing-item[aria-selected="true"] {
+  background: var(--primaryColor);
+  color: #fff;
+}
+
+html .listing-items.normal .listing-item[aria-selected="true"] :is(.size, .modified) {
+  color: rgb(255 255 255 / 80%);
+}
+
+/* ================================================================== */
+/* 6  Liste & Kompakt: Grouped Tables (iOS) / Tabellen (macOS)         */
+/* ================================================================== */
+html .listing-items.list { --icon-size: 1.9em; }
+html .listing-items.compact { --icon-size: 1.45em; }
+
+html .listing-items:is(.list, .compact) h2 {
+  display: block;
+}
+
+html .listing-items:is(.list, .compact) > :is(.folder-items, .file-items, .pinned-items) {
+  background: var(--cu-cell);
+  border-radius: var(--cu-radius-lg);
+  overflow: hidden;
+  margin-bottom: 0.5em;
+}
+
+html .listing-items:is(.list, .compact) .listing-item,
+html .listing-items:is(.list, .compact) .listing-item.zebra-row:not([aria-selected="true"]) {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  box-shadow: none;
+  width: 100% !important;
+  padding: 0 0.85em !important;
+}
+
+html .listing-items.list .listing-item { min-height: 2.75rem; }
+html .listing-items.compact .listing-item { min-height: 2rem; }
+
+/* Inset-Trennlinien ab der Textkante */
+html .listing-items:is(.list, .compact) .listing-item::after {
+  content: "";
+  position: absolute;
+  left: calc(0.85em + var(--icon-size) + 0.6em);
+  right: 0;
+  bottom: 0;
+  height: var(--cu-hairline);
+  background: var(--cu-separator);
+  pointer-events: none;
+}
+
+html .listing-items:is(.list, .compact) .listing-item:last-child::after,
+html .listing-items:is(.list, .compact) .listing-item[aria-selected="true"]::after,
+html .listing-items:is(.list, .compact) .listing-item:has(+ [aria-selected="true"])::after {
+  display: none;
+}
+
+html .listing-items:is(.list, .compact) .listing-item .text {
+  padding-left: 0.6em;
+}
+
+html .listing-items:is(.list, .compact) .listing-item:hover {
+  background: var(--cu-hover) !important;
+}
+
+html .listing-items:is(.list, .compact) .listing-item[aria-selected="true"] {
+  background: var(--primaryColor) !important;
+  color: #fff;
+}
+
+html .listing-items:is(.list, .compact) .listing-item[aria-selected="true"] :is(.size, .modified, .created, .kind, .duration) {
+  color: rgb(255 255 255 / 82%);
+}
+
+html .listing-items:is(.list, .compact) .listing-item :is(.size, .modified, .created, .kind, .duration) {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ================================================================== */
+/* 7  Kachel- & Symbolansicht: wie Finder                              */
+/* ================================================================== */
+html .listing-items:is(.gallery, .icons) .listing-item {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0;
+  padding: 0.35em 0.25em;
+  gap: 0.3em;
+  justify-content: flex-start;
+  overflow: visible;
+}
+
+html .listing-items.gallery .listing-item .gallery-div {
+  height: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  aspect-ratio: auto;
+  width: 100%;
+}
+
+html .listing-items:is(.gallery, .icons) .image-preview {
+  border-radius: 8px;
+  padding: 6%;
+  box-sizing: border-box;
+  transition: background-color 0.12s var(--cu-ease);
+}
+
+html .listing-items.gallery .listing-item .text {
+  position: static;
+  padding: 0;
+  color: var(--textPrimary);
+  text-shadow: none;
+  font-weight: 400;
+  width: 100%;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+html .listing-items:is(.gallery, .icons) .listing-item .text .name {
+  font-weight: 400;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+html .listing-items:is(.gallery, .icons) .listing-item .text .name span {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.05em 0.4em;
+  border-radius: 4px;
+  vertical-align: top;
+}
+
+/* Finder-Auswahl: graue Fläche hinter dem Symbol, Akzent-Pille um den Namen */
+html .listing-items:is(.gallery, .icons) .listing-item[aria-selected="true"] .image-preview {
+  background: var(--cu-select-gray);
+}
+
+html .listing-items:is(.gallery, .icons) .listing-item[aria-selected="true"] .text .name span {
+  background: var(--primaryColor);
+  color: #fff;
+}
+
+html .listing-items:is(.gallery, .icons) .listing-item[aria-selected="true"] {
+  color: var(--textPrimary);
+}
+
+/* ================================================================== */
+/* 8  Mobil: Kacheln werden zur gruppierten Liste (iOS-Dateien-App)    */
+/* ================================================================== */
+@media (width <= 768px) {
+  html .listing-items.normal > :is(.folder-items, .file-items, .pinned-items) {
+    background: var(--cu-cell);
+    border-radius: var(--cu-radius-lg);
+    overflow: hidden;
+    box-sizing: border-box;
+    width: auto;
+    margin: 0 0.5em 0.5em;
+  }
+
+  html .listing-items.normal .listing-item {
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0;
+    padding: 0.55em 0.9em;
+  }
+
+  html .listing-items.normal .listing-item::after {
+    content: "";
+    position: absolute;
+    left: calc(0.9em + var(--icon-size) + 0.7em);
+    right: 0;
+    bottom: 0;
+    height: var(--cu-hairline);
+    background: var(--cu-separator);
+  }
+
+  html .listing-items.normal .listing-item:last-child::after,
+  html .listing-items.normal .listing-item[aria-selected="true"]::after {
+    display: none;
+  }
+
+  html .listing-items.normal .listing-item:hover {
+    background: transparent;
+  }
+
+  html .listing-items.normal .listing-item:active {
+    background: var(--cu-select-gray);
+  }
+
+  html .listing-items:is(.list, .compact) > :is(.folder-items, .file-items, .pinned-items) {
+    margin-inline: 0.5em;
+  }
+
+  html .settings-views {
+    padding-inline: 1rem;
+    box-sizing: border-box;
+  }
+}
+
+/* ================================================================== */
+/* 9  Ordner- & Dateisymbole                                           */
+/* ================================================================== */
+
+/* --- Ordner ------------------------------------------------------- */
+/* Zwei maskierte Ebenen, damit die Farbe aus der Akzentfarbe kommt:
+ *   ::before  Rückwand mit Reiter
+ *   ::after   Papierkante + Vorderseite (harter Verlauf: weiß → Ordnerfarbe) */
+html .listing-item[data-dir="true"] .image-preview > img,
+html .listing-item[data-dir="true"] .image-preview > i:not(.overlay-icon),
+html .listing-item[data-dir="true"] .image-preview:has(> img) > .overlay-icon:first-child,
+html .listing-item[data-dir="true"] .image-preview > .three-js-container {
+  display: none !important;
+}
+
+html .listing-item[data-dir="true"] .image-preview {
+  filter: drop-shadow(0 0.5px 0.75px rgb(0 0 0 / 18%));
+}
+
+html .listing-item[data-dir="true"] .image-preview::before,
+html .listing-item[data-dir="true"] .image-preview::after {
+  content: "";
+  position: absolute;
+  inset: 6%;
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  pointer-events: none;
+}
+
+html .listing-item[data-dir="true"] .image-preview::before {
+  background: var(--cu-folder-back);
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M4 21.5C4 18.5 6.5 16 9.5 16H33c2 0 3.6.8 4.8 2.3L41 22h49.5c3 0 5.5 2.5 5.5 5.5V84c0 3.3-2.7 6-6 6H10c-3.3 0-6-2.7-6-6Z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M4 21.5C4 18.5 6.5 16 9.5 16H33c2 0 3.6.8 4.8 2.3L41 22h49.5c3 0 5.5 2.5 5.5 5.5V84c0 3.3-2.7 6-6 6H10c-3.3 0-6-2.7-6-6Z'/></svg>");
+}
+
+html .listing-item[data-dir="true"] .image-preview::after {
+  background: linear-gradient(
+    to bottom,
+    #fdfdfd 0,
+    #f1f1f3 30%,
+    color-mix(in oklab, var(--cu-folder-front) 55%, white) 30%,
+    var(--cu-folder-front) 32.5%,
+    var(--cu-folder-front) 80%,
+    color-mix(in oklab, var(--cu-folder-front) 88%, black) 80.6%,
+    var(--cu-folder-front) 81.6%,
+    color-mix(in oklab, var(--cu-folder-front) 93%, black) 100%
+  );
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M11 25.5c0-1.1.9-2 2-2h74c1.1 0 2 .9 2 2V34H11Z'/><path d='M2.5 36c0-3.3 2.7-6 6-6h83c3.3 0 6 2.7 6 6v48.5c0 3.3-2.7 6-6 6h-83c-3.3 0-6-2.7-6-6Z'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M11 25.5c0-1.1.9-2 2-2h74c1.1 0 2 .9 2 2V34H11Z'/><path d='M2.5 36c0-3.3 2.7-6 6-6h83c3.3 0 6 2.7 6 6v48.5c0 3.3-2.7 6-6 6h-83c-3.3 0-6-2.7-6-6Z'/></svg>");
+}
+
+/* --- Dateien ohne Vorschaubild ------------------------------------ */
+/* ::before der Box = Blatt mit Eselsohr, i::before = Glyphe, i::after = Endung */
+html .listing-item[data-dir="false"] .image-preview:not(:has(img))::before {
+  content: "";
+  position: absolute;
+  inset: 4%;
+  background: center / contain no-repeat url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='p' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%23ffffff'/><stop offset='1' stop-color='%23f0f0f2'/></linearGradient><linearGradient id='f' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23fafafa'/><stop offset='1' stop-color='%23d9d9de'/></linearGradient></defs><path d='M19 3.5h42.5L88 30v60.5a6 6 0 0 1-6 6H19a6 6 0 0 1-6-6v-81a6 6 0 0 1 6-6Z' fill='url(%23p)' stroke='%23000' stroke-opacity='.13' vector-effect='non-scaling-stroke'/><path d='M61.5 3.5V24a6 6 0 0 0 6 6H88Z' fill='url(%23f)' stroke='%23000' stroke-opacity='.10' stroke-linejoin='round' vector-effect='non-scaling-stroke'/></svg>");
+  filter: drop-shadow(0 0.5px 1px rgb(0 0 0 / 14%));
+  pointer-events: none;
+}
+
+html .listing-item[data-dir="false"] .image-preview:not(:has(img)) > i:not(.overlay-icon) {
+  font-size: 0 !important;
+  color: transparent !important;
+  transform: none;
+  position: static;
+  padding: 0;
+  width: 0;
+  height: 0;
+}
+
+html .listing-item[data-dir="false"] .image-preview:not(:has(img)) > i:not(.overlay-icon)::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 40%;
+  height: 40%;
+  translate: -50% -50%;
+  background: var(--cu-glyph);
+  mask: var(--cu-glyph-mask, none) center / contain no-repeat;
+  -webkit-mask: var(--cu-glyph-mask, none) center / contain no-repeat;
+}
+
+html .listing-item[data-dir="false"] .image-preview:not(:has(img)) > i:not(.overlay-icon)::after {
+  content: var(--cu-ext, "");
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 13%;
+  font-family: var(--cu-font);
+  font-style: normal;
+  font-size: 13cqh;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-align: center;
+  color: var(--cu-glyph);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* In schmalen Listen ist die Endung unlesbar → nur die (größere) Glyphe zeigen */
+@container (max-width: 44px) {
+  .listing-item[data-dir="false"] .image-preview > i:not(.overlay-icon)::after {
+    display: none;
+  }
+
+  .listing-item[data-dir="false"] .image-preview > i:not(.overlay-icon)::before {
+    top: 56%;
+    width: 46%;
+    height: 46%;
+  }
+}
+
+/* --- Glyphen nach Typ (MIME aus data-type) ------------------------ */
+.listing-item[data-dir="false"] {
+  /* Standard: Textzeilen */
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'><path d='M4 6h16M4 10h16M4 14h16M4 18h10'/></svg>");
+}
+
+.listing-item[data-type="application/pdf"] {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='3' y='3' width='8' height='8' rx='1.5'/><path d='M14 4.5h7M14 9.5h7M3 15h18M3 19.5h18' stroke='%23000' stroke-width='2' stroke-linecap='round'/></svg>");
+}
+
+.listing-item:is([data-type*="spreadsheet"], [data-type*="ms-excel"], [data-type="text/csv"], [data-type*="numbers"]) {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8'><rect x='2.5' y='4' width='19' height='16' rx='2.5'/><path d='M2.5 9.5h19M2.5 14.75h19M9 4v16'/></svg>");
+}
+
+.listing-item:is([data-type*="presentation"], [data-type*="powerpoint"], [data-type*="keynote"]) {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round'><rect x='2.5' y='3.5' width='19' height='13' rx='2'/><path d='M12 16.5v4M8 20.5h8M7.5 12.5v-2M12 12.5v-5M16.5 12.5V9'/></svg>");
+}
+
+.listing-item:is([data-type*="wordprocessing"], [data-type*="msword"], [data-type*="opendocument.text"], [data-type*="rtf"]) {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'><path d='M8 4.5h8M4 9h16M4 13h16M4 17h16M4 21h9'/></svg>");
+}
+
+.listing-item[data-type^="image/"] {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill-rule='evenodd' d='M5 3h14a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v9.6l4.3-4.3a1.5 1.5 0 0 1 2.1 0l3.1 3.1 1.6-1.6a1.5 1.5 0 0 1 2.1 0L20 15.6V6a1 1 0 0 0-1-1Zm11.5 2.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z'/></svg>");
+}
+
+.listing-item[data-type^="video/"] {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill-rule='evenodd' d='M5 3h14a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1Zm5 3.3 5.6 3.3a.5.5 0 0 1 0 .8L10 15.7a.5.5 0 0 1-.75-.43V8.73A.5.5 0 0 1 10 8.3Z'/></svg>");
+}
+
+.listing-item[data-type^="audio/"] {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M20 3.2v12.3a3.5 3.5 0 1 1-2-3.16V7.4L10 9.1v8.4A3.5 3.5 0 1 1 8 14.34V6.5a1 1 0 0 1 .8-.98l10-2.2a1 1 0 0 1 1.2.88Z'/></svg>");
+}
+
+.listing-item:is([data-type*="zip"], [data-type*="x-tar"], [data-type*="gzip"], [data-type*="x-7z"], [data-type*="rar"], [data-type*="bzip"], [data-type*="x-xz"], [data-type*="compressed"]) {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M11 0h2v2h-2zM13 2h2v2h-2zM11 4h2v2h-2zM13 6h2v2h-2zM11 8h2v2h-2z'/><path fill-rule='evenodd' d='M10.5 11h3a1.5 1.5 0 0 1 1.5 1.5v7a3 3 0 0 1-6 0v-7A1.5 1.5 0 0 1 10.5 11Zm1.5 6.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z'/></svg>");
+}
+
+.listing-item:is([data-type="text/javascript"], [data-type*="typescript"], [data-type="text/css"], [data-type="text/html"], [data-type*="json"], [data-type$="/xml"], [data-type$="+xml"], [data-type*="yaml"], [data-type^="text/x-"], [data-type*="x-sh"], [data-type*="x-python"]) {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 6 2 12l6 6M16 6l6 6-6 6M13.5 4l-3 16'/></svg>");
+}
+
+.listing-item:is([data-type*="diskimage"], [data-type*="iso9660"], [data-type*="x-iso"]) {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill-rule='evenodd' d='M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm5 4v6.6l-2.3-2.3-1.4 1.4L12 16.4l4.7-4.7-1.4-1.4-2.3 2.3V6ZM16 18.5a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z'/></svg>");
+}
+
+.listing-item[data-type^="font/"],
+.listing-item[data-type*="font-"] {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 20 9.5 4h1L17 20M5.6 14h8.8M17.5 12.5a3 3 0 0 1 3.5 3V20M21 17.5c-2.5-.8-4.6 0-4.6 1.4 0 1.6 2.6 1.6 4.6-.4'/></svg>");
+}
+
+.listing-item:is([data-type*="executable"], [data-type*="x-msdownload"], [data-type*="android.package"], [data-type*="x-deb"], [data-type*="x-rpm"]) {
+  --cu-glyph-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8'><rect x='3' y='3' width='18' height='18' rx='5'/><path d='M3 8h18'/></svg>");
+}
+
+/* --- Dateiendung als Beschriftung -------------------------------- */
+.listing-item[data-name$=".pdf" i] { --cu-ext: "PDF"; }
+.listing-item[data-name$=".txt" i] { --cu-ext: "TXT"; }
+.listing-item[data-name$=".md" i] { --cu-ext: "MD"; }
+.listing-item[data-name$=".rtf" i] { --cu-ext: "RTF"; }
+.listing-item[data-name$=".log" i] { --cu-ext: "LOG"; }
+.listing-item[data-name$=".doc" i] { --cu-ext: "DOC"; }
+.listing-item[data-name$=".docx" i] { --cu-ext: "DOCX"; }
+.listing-item[data-name$=".odt" i] { --cu-ext: "ODT"; }
+.listing-item[data-name$=".pages" i] { --cu-ext: "PAGES"; }
+.listing-item[data-name$=".xls" i] { --cu-ext: "XLS"; }
+.listing-item[data-name$=".xlsx" i] { --cu-ext: "XLSX"; }
+.listing-item[data-name$=".ods" i] { --cu-ext: "ODS"; }
+.listing-item[data-name$=".numbers" i] { --cu-ext: "NUMBERS"; }
+.listing-item[data-name$=".csv" i] { --cu-ext: "CSV"; }
+.listing-item[data-name$=".ppt" i] { --cu-ext: "PPT"; }
+.listing-item[data-name$=".pptx" i] { --cu-ext: "PPTX"; }
+.listing-item[data-name$=".odp" i] { --cu-ext: "ODP"; }
+.listing-item[data-name$=".key" i] { --cu-ext: "KEY"; }
+.listing-item[data-name$=".jpg" i] { --cu-ext: "JPG"; }
+.listing-item[data-name$=".jpeg" i] { --cu-ext: "JPEG"; }
+.listing-item[data-name$=".png" i] { --cu-ext: "PNG"; }
+.listing-item[data-name$=".gif" i] { --cu-ext: "GIF"; }
+.listing-item[data-name$=".webp" i] { --cu-ext: "WEBP"; }
+.listing-item[data-name$=".heic" i] { --cu-ext: "HEIC"; }
+.listing-item[data-name$=".svg" i] { --cu-ext: "SVG"; }
+.listing-item[data-name$=".tif" i],
+.listing-item[data-name$=".tiff" i] { --cu-ext: "TIFF"; }
+.listing-item[data-name$=".psd" i] { --cu-ext: "PSD"; }
+.listing-item[data-name$=".raw" i] { --cu-ext: "RAW"; }
+.listing-item[data-name$=".mp4" i] { --cu-ext: "MP4"; }
+.listing-item[data-name$=".mov" i] { --cu-ext: "MOV"; }
+.listing-item[data-name$=".mkv" i] { --cu-ext: "MKV"; }
+.listing-item[data-name$=".avi" i] { --cu-ext: "AVI"; }
+.listing-item[data-name$=".webm" i] { --cu-ext: "WEBM"; }
+.listing-item[data-name$=".mp3" i] { --cu-ext: "MP3"; }
+.listing-item[data-name$=".m4a" i] { --cu-ext: "M4A"; }
+.listing-item[data-name$=".wav" i] { --cu-ext: "WAV"; }
+.listing-item[data-name$=".flac" i] { --cu-ext: "FLAC"; }
+.listing-item[data-name$=".aac" i] { --cu-ext: "AAC"; }
+.listing-item[data-name$=".ogg" i] { --cu-ext: "OGG"; }
+.listing-item[data-name$=".zip" i] { --cu-ext: "ZIP"; }
+.listing-item[data-name$=".rar" i] { --cu-ext: "RAR"; }
+.listing-item[data-name$=".7z" i] { --cu-ext: "7Z"; }
+.listing-item[data-name$=".tar" i] { --cu-ext: "TAR"; }
+.listing-item[data-name$=".gz" i] { --cu-ext: "GZ"; }
+.listing-item[data-name$=".dmg" i] { --cu-ext: "DMG"; }
+.listing-item[data-name$=".iso" i] { --cu-ext: "ISO"; }
+.listing-item[data-name$=".exe" i] { --cu-ext: "EXE"; }
+.listing-item[data-name$=".apk" i] { --cu-ext: "APK"; }
+.listing-item[data-name$=".js" i] { --cu-ext: "JS"; }
+.listing-item[data-name$=".ts" i] { --cu-ext: "TS"; }
+.listing-item[data-name$=".vue" i] { --cu-ext: "VUE"; }
+.listing-item[data-name$=".py" i] { --cu-ext: "PY"; }
+.listing-item[data-name$=".go" i] { --cu-ext: "GO"; }
+.listing-item[data-name$=".rs" i] { --cu-ext: "RS"; }
+.listing-item[data-name$=".java" i] { --cu-ext: "JAVA"; }
+.listing-item[data-name$=".php" i] { --cu-ext: "PHP"; }
+.listing-item[data-name$=".sh" i] { --cu-ext: "SH"; }
+.listing-item[data-name$=".css" i] { --cu-ext: "CSS"; }
+.listing-item[data-name$=".html" i],
+.listing-item[data-name$=".htm" i] { --cu-ext: "HTML"; }
+.listing-item[data-name$=".json" i] { --cu-ext: "JSON"; }
+.listing-item[data-name$=".xml" i] { --cu-ext: "XML"; }
+.listing-item[data-name$=".yml" i],
+.listing-item[data-name$=".yaml" i] { --cu-ext: "YAML"; }
+.listing-item[data-name$=".sql" i] { --cu-ext: "SQL"; }
+.listing-item[data-name$=".ttf" i] { --cu-ext: "TTF"; }
+.listing-item[data-name$=".otf" i] { --cu-ext: "OTF"; }
+.listing-item[data-name$=".woff" i],
+.listing-item[data-name$=".woff2" i] { --cu-ext: "WOFF"; }
+.listing-item[data-name$=".epub" i] { --cu-ext: "EPUB"; }
+
+/* ================================================================== */
+/* 10  Scrollbar                                                       */
+/* ================================================================== */
+/* Schmale Overlay-Scrollbar wie in macOS; Abschnittsbuchstabe frei schwebend */
+html .custom-scrollbar .thumb {
+  width: 7px;
+  height: 4.5em;
+  border: 0;
+  border-radius: 4px;
+  background: var(--cu-scroll-thumb);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: right 0.25s var(--cu-ease), opacity 0.2s, width 0.15s var(--cu-ease);
+}
+
+html .custom-scrollbar .thumb.visible {
+  right: 3px;
+}
+
+html .custom-scrollbar:hover .thumb,
+html .custom-scrollbar .thumb:active {
+  width: 10px;
+}
+
+html .custom-scrollbar .thumb-letters {
+  display: none;
+}
+
+html .custom-scrollbar .thumb-section-id {
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  width: auto;
+  min-width: 1.4em;
+  height: auto;
+  right: 1.4em;
+  font-size: 1.9rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--textPrimary);
+  text-shadow: var(--cu-letter-shadow);
+}
+
+/* ================================================================== */
+/* 11  Einstellungen im Stil der iOS-Einstellungen                     */
+/* ================================================================== */
+
+/* --- Navigation (Seitenleiste nach Klick aufs Zahnrad) ------------ */
+html nav#sidebar .settings-card,
+html nav#sidebar .settings-card-collapsible {
+  margin: 0 !important;
+  border-radius: 0 !important;
+  background: var(--cu-cell) !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  position: relative;
+}
+
+html nav#sidebar :is(.settings-card, .settings-card-collapsible):nth-child(1 of .card) {
+  border-top-left-radius: var(--cu-radius-lg) !important;
+  border-top-right-radius: var(--cu-radius-lg) !important;
+  overflow: hidden;
+}
+
+html nav#sidebar :is(.settings-card, .settings-card-collapsible):nth-last-child(1 of .card) {
+  border-bottom-left-radius: var(--cu-radius-lg) !important;
+  border-bottom-right-radius: var(--cu-radius-lg) !important;
+  overflow: hidden;
+}
+
+html nav#sidebar .settings-card:not(.settings-card-collapsible-header, .settings-card-collapsible-sub-item),
+html nav#sidebar .settings-card-collapsible-header,
+html nav#sidebar .settings-card-collapsible-sub-item {
+  min-height: 2.75rem;
+  height: auto;
+  padding: 0.35rem 0.75rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+/* Trennlinien zwischen den Zeilen, eingerückt ab dem Text */
+html nav#sidebar :is(.settings-card, .settings-card-collapsible):not(:nth-last-child(1 of .card))::after {
+  content: "";
+  position: absolute;
+  left: 3.1rem;
+  right: 0;
+  bottom: 0;
+  height: var(--cu-hairline);
+  background: var(--cu-separator);
+}
+
+/* Farbige Symbol-Kacheln wie in iOS */
+html nav#sidebar .settings-icon {
+  --cu-tile: #8e8e93;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-right: 0.7rem;
+  border-radius: 7px;
+  font-size: 1.15rem !important;
+  color: #fff !important;
+  background: var(--cu-tile);
+  font-variation-settings: "FILL" 1;
+}
+
+html nav#sidebar .settings-card-collapsible:nth-child(1 of .card) .settings-icon { --cu-tile: #007aff; }
+html nav#sidebar #fileLoading-sidebar .settings-icon { --cu-tile: #32ade6; }
+html nav#sidebar #notifications-sidebar .settings-icon { --cu-tile: #ff3b30; }
+html nav#sidebar #shares-sidebar .settings-icon { --cu-tile: #34c759; }
+html nav#sidebar #api-sidebar .settings-icon { --cu-tile: #8e8e93; }
+html nav#sidebar .settings-card-collapsible:not(:nth-child(1 of .card)) .settings-icon { --cu-tile: #5856d6; }
+html nav#sidebar #systemAdmin-sidebar .settings-icon { --cu-tile: #636366; }
+
+html nav#sidebar .settings-item-content {
+  display: flex;
+  align-items: center;
+  color: var(--textPrimary);
+}
+
+/* Chevron rechts wie in iOS-Tabellen */
+html nav#sidebar .settings-card:not(.settings-card-collapsible-header)::before {
+  content: "";
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  width: 0.45rem;
+  height: 0.75rem;
+  translate: 0 -50%;
+  background: var(--textSecondary);
+  opacity: 0.55;
+  mask: center / contain no-repeat url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 14' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m1 1 6 6-6 6'/></svg>");
+  -webkit-mask: center / contain no-repeat url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 14' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m1 1 6 6-6 6'/></svg>");
+}
+
+html nav#sidebar .settings-card-collapsible--active {
+  outline: 0 !important;
+}
+
+html nav#sidebar .settings-card-collapsible--expanded .settings-card-sub-item-inner {
+  border-top: 0 !important;
+}
+
+html nav#sidebar .settings-card-collapsible-chevron {
+  color: var(--textSecondary);
+  opacity: 0.6;
+}
+
+/* Unterpunkte: eingerückt, ohne Symbol */
+html nav#sidebar .settings-card-collapsible-sub-item {
+  padding-left: 3.1rem !important;
+  min-height: 2.4rem !important;
+  font-size: 0.88rem;
+  border-top: var(--cu-hairline) solid var(--cu-separator);
+}
+
+/* Aktiver Eintrag: Akzentfläche wie in der iPad-Seitenleiste */
+html nav#sidebar .active-settings,
+html nav#sidebar .settings-card.active-settings {
+  background: var(--primaryColor) !important;
+}
+
+html nav#sidebar .active-settings .settings-item-content,
+html nav#sidebar .active-settings .settings-card-collapsible-chevron {
+  color: #fff;
+}
+
+html nav#sidebar .active-settings::before {
+  background: #fff !important;
+}
+
+html nav#sidebar .settings-card:hover:not(.active-settings) {
+  background: color-mix(in srgb, var(--cu-cell) 92%, var(--textPrimary)) !important;
+}
+
+/* --- Inhalt: eine große Liste aus gruppierten Tabellen ------------ */
+html .settings-views,
+html .dashboard {
+  max-width: 46rem;
+}
+
+html .dashboard {
+  margin-inline: auto;
+}
+
+html .settings-views .card-title h2,
+html .dashboard .card-title h2 {
+  text-align: left;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0.4em 0 0.6em;
+  color: var(--textPrimary);
+}
+
+html .settings-views .card,
+html .dashboard > .card {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+}
+
+/* Akkordeon auflösen: alle Abschnitte offen, Titel = Abschnittsüberschrift */
+html .settings-accordion .settings-content {
+  display: block !important;
+  height: auto !important;
+  opacity: 1 !important;
+  overflow: visible;
+  margin: 0;
+  padding: 0;
+}
+
+html .settings-group-title {
+  background: transparent !important;
+  pointer-events: none;
+  padding: 1.4em 1rem 0.4em !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+html .settings-group-title h3 {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--textSecondary);
+}
+
+html .settings-group-title .collapse-icon {
+  display: none;
+}
+
+/* Abschnittsüberschriften der einzelnen Felder */
+html .settings-views h4,
+html .preference-field-block > h4,
+html .profile-enforceable-field__value > h4 {
+  margin: 1.4em 0 0.4em;
+  padding: 0 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--textSecondary);
+}
+
+html .settings-views .settings-items h3 {
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+/* Zellen */
+html .settings-views .settings-items {
+  gap: 0;
+}
+
+html .settings-views .settings-items > .item,
+html .settings-views .settings-items > .toggle-container,
+html .settings-views .settings-items > .profile-enforceable-field > .profile-enforceable-field__value > .settings-items > .item {
+  background: var(--cu-cell) !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  min-height: 2.75rem;
+  padding: 0.35rem 1rem !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  position: relative;
+}
+
+/* Gruppengrenzen: erste/letzte Zelle einer zusammenhängenden Folge runden */
+html .settings-views .settings-items > :is(.item, .toggle-container):not(:is(.item, .toggle-container) + *) {
+  border-top-left-radius: var(--cu-radius-lg) !important;
+  border-top-right-radius: var(--cu-radius-lg) !important;
+}
+
+html .settings-views .settings-items > :is(.item, .toggle-container):not(:has(+ :is(.item, .toggle-container))) {
+  border-bottom-left-radius: var(--cu-radius-lg) !important;
+  border-bottom-right-radius: var(--cu-radius-lg) !important;
+}
+
+html .settings-views .settings-items > :is(.item, .toggle-container):has(+ :is(.item, .toggle-container))::after {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  right: 0;
+  bottom: 0;
+  height: var(--cu-hairline);
+  background: var(--cu-separator);
+}
+
+html .settings-views .toggle-name {
+  font-size: 0.95rem;
+  color: var(--textPrimary);
+}
+
+html .settings-views .tooltip-info-icon {
+  color: var(--textSecondary);
+  opacity: 0.55;
+  font-size: 1.05rem !important;
+}
+
+/* Auswahlfelder (Dropdowns) als Zelle mit Chevron */
+html .settings-views .expand-dropdown-anchor.menu-panel {
+  background: var(--cu-cell) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: var(--cu-radius-lg) !important;
+  min-height: 2.75rem;
+}
+
+html .settings-views .expand-dropdown-trigger {
+  background: transparent !important;
+}
+
+html .settings-views .expand-dropdown-chevron {
+  color: var(--textSecondary);
+}
+
+/* Segmented Control (z. B. Akzentfarbe) */
+html .button-group {
+  background: var(--cu-fill) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 9px !important;
+  padding: 2px;
+  gap: 0;
+}
+
+html .button-group button {
+  background: transparent !important;
+  color: var(--textPrimary) !important;
+  border: 0 !important;
+  border-radius: 7px !important;
+  min-height: 1.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  transition: background-color 0.2s var(--cu-ease), box-shadow 0.2s var(--cu-ease);
+}
+
+html .button-group button.active {
+  background: var(--cu-segment-active) !important;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 12%), 0 3px 1px rgb(0 0 0 / 4%), 0 0 0 0.5px rgb(0 0 0 / 4%) !important;
+}
+
+/* Farbpunkte vor den Namen der Akzentfarben */
+html .theme-color-group .button-group button::before {
+  content: "";
+  width: 0.7em;
+  height: 0.7em;
+  margin-right: 0.45em;
+  border-radius: 50%;
+  background: var(--cu-swatch);
+  box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 15%);
+  flex-shrink: 0;
+}
+
+html .theme-color-group .button-group button:nth-child(1) { --cu-swatch: var(--blue); }
+html .theme-color-group .button-group button:nth-child(2) { --cu-swatch: var(--red); }
+html .theme-color-group .button-group button:nth-child(3) { --cu-swatch: var(--icon-green); }
+html .theme-color-group .button-group button:nth-child(4) { --cu-swatch: var(--icon-violet); }
+html .theme-color-group .button-group button:nth-child(5) { --cu-swatch: var(--icon-yellow); }
+html .theme-color-group .button-group button:nth-child(6) { --cu-swatch: var(--icon-orange); }
+
+/* --- Schalter (UISwitch / NSSwitch) ------------------------------- */
+html label.switch:not(.switch--icon-mode) {
+  width: 51px;
+  height: 31px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+html label.switch:not(.switch--icon-mode) .slider {
+  background-color: var(--cu-switch-off);
+  border-radius: 31px;
+  transition: background-color 0.25s var(--cu-ease);
+}
+
+html label.switch:not(.switch--icon-mode) .slider::before {
+  width: 27px;
+  height: 27px;
+  left: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 15%), 0 3px 1px rgb(0 0 0 / 6%), 0 0 0 0.5px rgb(0 0 0 / 4%);
+  transition: transform 0.3s cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+html label.switch:not(.switch--icon-mode) input:checked + .slider {
+  background-color: var(--primaryColor);
+}
+
+html label.switch:not(.switch--icon-mode) input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+html label.switch:not(.switch--icon-mode) input:focus-visible + .slider {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primaryColor) 40%, transparent);
+}
+
+html label.switch:not(.switch--icon-mode) input:disabled + .slider {
+  opacity: 0.45;
+}
+
+/* Icon-Schalter (Seitenleiste: Ordner/Links) */
+html .switch--icon-mode .slider {
+  background: var(--cu-fill) !important;
+}
+
+html .switch--icon-mode .slider-knob {
+  box-shadow: 0 2px 6px rgb(0 0 0 / 15%), 0 0 0 0.5px rgb(0 0 0 / 4%);
+}
+
+/* ================================================================== */
+/* 12  Dialoge, Menüs, Barrierefreiheit                                */
+/* ================================================================== */
+html .card {
+  border-radius: var(--cu-radius-lg);
+}
+
+html .floating-window,
+html .card.floating,
+html #context-menu,
+html .context-menu {
+  background: color-mix(in srgb, var(--surfacePrimary) 86%, transparent);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: var(--cu-hairline) solid var(--cu-separator);
+  box-shadow: var(--surfaceElevationShadow);
+  border-radius: var(--cu-radius-lg);
+}
+
+html .card-title h2 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html header.flexbar,
+  html #status-bar,
+  html nav#sidebar,
+  html .floating-window,
+  html .card.floating {
+    background: var(--alt-background);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html label.switch .slider,
+  html label.switch .slider::before,
+  html .listing-items .listing-item,
+  html .custom-scrollbar .thumb {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root { --cu-separator: var(--textSecondary); --cu-glyph: var(--textSecondary); }
+}

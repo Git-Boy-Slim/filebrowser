@@ -1,0 +1,39 @@
+# Beispiel-Ausschnitt für die config.yaml von FileBrowser Quantum.
+# Nur den Block unter `frontend.styling` (und optional userDefaults) übernehmen.
+#
+# Pfade werden vom Backend per os.ReadFile gelesen:
+#   - relative Pfade gelten ab dem Arbeitsverzeichnis des Prozesses
+#     (Docker-Image: /home/filebrowser), NICHT ab der config.yaml
+#   - absolute Pfade sind am robustesten (in Docker per Volume einbinden)
+# Die Dateien werden nur beim Start gelesen → nach Änderungen neu starten.
+# Ist eine Datei nicht lesbar, leer oder > 128 KB, wird sie mit einer Warnung
+# im Log übersprungen.
+
+frontend:
+  styling:
+    # Passend zu --background des Themes; verhindert helles/dunkles Aufblitzen
+    lightBackground: "#f5f5f7"
+    darkBackground: "#18181a"
+
+    # Login-Seite: dort ist noch kein Nutzer bekannt, darum lädt die App kein
+    # Nutzer-Theme. login.css wirkt nur innerhalb von #login und lässt andere
+    # Themes unberührt – kann also dauerhaft gesetzt bleiben.
+    customCSS: "/home/filebrowser/themes/cupertino/login.css"
+
+    # Auswählbare Themes (Profil → Theme & Language → „Choose your theme“).
+    customThemes:
+      default:
+        description: "Standard"
+        css: ""
+      cupertino:
+        description: "Cupertino (macOS / iOS)"
+        css: "/home/filebrowser/themes/cupertino/theme.css"
+
+# Optional: Cupertino als Voreinstellung für neue Nutzer
+userDefaults:
+  ui:
+    customTheme: "cupertino"
+
+# Docker-Beispiel (docker-compose.yaml):
+#   volumes:
+#     - ./themes:/home/filebrowser/themes:ro

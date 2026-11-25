@@ -4,13 +4,32 @@ Ein Theme ist eine reine CSS-Datei – am App-Code muss nichts geändert werden.
 
 ```
 themes/
-├── custom/
-│   ├── theme.css             Theme-Gerüst (hell + dunkel, aktuell = Standardwerte)
+├── cupertino/                macOS-/iOS-Theme nach den Human Interface Guidelines
+│   ├── theme.css             Nutzer-Theme (customThemes) – hell + dunkel, live umschaltbar
+│   ├── login.css             Login-Seite (customCSS) – wirkt nur innerhalb von #login
 │   └── config.example.yaml   Beispiel für frontend.styling in der config.yaml
 └── dev/
     ├── config.dev.yaml       Config für eine lokale Testinstanz (Port 8090)
-    └── shot.js               Playwright: Login + Screenshots hell/dunkel
+    └── shot.js               Playwright: Screenshots aller Ansichten (hell/dunkel, mobil)
 ```
+
+## Cupertino auf einen Blick
+
+- **Akzentfarbe:** Die sechs Farben der Auswahl im Profil sind auf Apple-Systemfarben
+  umdefiniert. Ordner, Schalter, Auswahl und Buttons folgen der gewählten Farbe; eine
+  eigene Hex-Farbe funktioniert ebenfalls (die Ordnerfarben werden dann daraus gemischt).
+- **Symbole:** Ordner und Dateitypen sind eigene Vektorzeichnungen im macOS-Stil, rein in
+  CSS (Masken + `data-type`/`data-name` der Listeneinträge). Dateien mit Vorschaubild
+  behalten ihr Bild. In schmalen Listen wird die Endung ausgeblendet und die Glyphe größer.
+- **Ansichten:** Liste/Kompakt als gruppierte Tabellen (Ordner / Dateien), Kacheln und
+  Symbole wie im Finder (Rand erst bei Auswahl), mobil als gruppierte Liste wie in der
+  iOS-Dateien-App.
+- **Einstellungen:** eine durchgehende Liste aus gruppierten Tabellen mit
+  Abschnittsüberschriften, iOS-Schaltern und einem Segmented Control mit Farbpunkten;
+  die Navigation links wie die Startseite der iOS-Einstellungen.
+- **Login:** Über `customCSS`, weil die App auf der Login-Seite noch keinen Nutzer und
+  damit kein Nutzer-Theme kennt. Die Datei ist auf `#login` begrenzt, beeinflusst also
+  weder die App noch andere Themes.
 
 ## So funktioniert das Theming
 
@@ -78,5 +97,13 @@ cd themes/dev && mkdir -p files && ./filebrowser -c config.dev.yaml
 node themes/dev/shot.js themes/dev/shots
 ```
 
-Nach jeder Änderung an `theme.css` den Server neu starten (Schritt 3), dann Schritt 4.
+Schneller iterieren ohne Neustart: `shot.js` kann die CSS-Dateien direkt in die Seite
+injizieren und optional nur bestimmte Ansichten fotografieren:
+
+```bash
+node themes/dev/shot.js /tmp/shots themes/cupertino/theme.css themes/cupertino/login.css files-list,settings
+```
+
+Erst für den echten Test (oder nach dem Commit) den Server neu starten – er liest die
+CSS-Dateien nur beim Start.
 Für Arbeit an App-Code gibt es zusätzlich `make dev` (Vite-HMR + Air).

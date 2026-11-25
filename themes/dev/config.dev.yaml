@@ -14,13 +14,16 @@ auth:
       minLength: 5
 userDefaults:
   ui:
-    customTheme: "custom"
+    customTheme: "cupertino"
 frontend:
   styling:
+    lightBackground: "#f5f5f7"
+    darkBackground: "#18181a"
+    customCSS: "../cupertino/login.css"
     customThemes:
       default:
         description: "Standard"
         css: ""
-      custom:
-        description: "Custom Theme"
-        css: "../custom/theme.css"
+      cupertino:
+        description: "Cupertino (macOS / iOS)"
+        css: "../cupertino/theme.css"

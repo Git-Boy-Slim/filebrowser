@@ -1,0 +1,144 @@
+/*
+ * Cupertino – Login-Seite
+ * ------------------------------------------------------------------
+ * Auf der Login-Seite ist noch kein Nutzer bekannt, deshalb lädt die App
+ * dort kein Nutzer-Theme. Diese Datei wird über `frontend.styling.customCSS`
+ * eingebunden (gilt für alle) und wirkt ausschließlich innerhalb von #login.
+ * Andere Themes und die übrige App bleiben davon unberührt.
+ * Hell/Dunkel folgt der Voreinstellung der Instanz (userDefaults.ui.darkMode).
+ */
+
+#login {
+  --lg-bg: #f2f2f7;
+  --lg-glow-1: rgb(0 122 255 / 16%);
+  --lg-glow-2: rgb(175 82 222 / 12%);
+  --lg-card: rgb(255 255 255 / 72%);
+  --lg-border: rgb(0 0 0 / 8%);
+  --lg-text: #1d1d1f;
+  --lg-text-2: #6e6e73;
+  --lg-field: rgb(255 255 255 / 85%);
+  --lg-field-border: rgb(0 0 0 / 12%);
+  --lg-accent: #007aff;
+  --lg-shadow: 0 0 0 0.5px rgb(0 0 0 / 4%), 0 4px 12px rgb(0 0 0 / 6%), 0 24px 64px rgb(0 0 0 / 12%);
+
+  min-height: 100dvh;
+  background:
+    radial-gradient(1200px 700px at 15% -10%, var(--lg-glow-1), transparent 70%),
+    radial-gradient(900px 700px at 110% 110%, var(--lg-glow-2), transparent 70%),
+    var(--lg-bg) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark-mode #login {
+  --lg-bg: #0e0e11;
+  --lg-glow-1: rgb(10 132 255 / 20%);
+  --lg-glow-2: rgb(191 90 242 / 14%);
+  --lg-card: rgb(38 38 40 / 70%);
+  --lg-border: rgb(255 255 255 / 10%);
+  --lg-text: #f5f5f7;
+  --lg-text-2: #98989d;
+  --lg-field: rgb(255 255 255 / 6%);
+  --lg-field-border: rgb(255 255 255 / 14%);
+  --lg-accent: #0a84ff;
+  --lg-shadow: 0 0 0 0.5px rgb(255 255 255 / 6%), 0 4px 12px rgb(0 0 0 / 30%), 0 24px 64px rgb(0 0 0 / 50%);
+}
+
+#login .login-card {
+  width: min(20rem, calc(100vw - 2rem));
+  padding: 2rem 1.75rem 1.5rem !important;
+  background: var(--lg-card) !important;
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 0.5px solid var(--lg-border) !important;
+  border-radius: 18px !important;
+  box-shadow: var(--lg-shadow) !important;
+  color: var(--lg-text);
+}
+
+#login .login-brand {
+  padding-top: 0;
+}
+
+#login .login-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  filter: drop-shadow(0 2px 6px rgb(0 0 0 / 15%));
+}
+
+#login .brand-text {
+  padding: 0.75rem 0 1.25rem;
+}
+
+#login .brand-text h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--lg-text);
+}
+
+#login .password-entry .input,
+#login .input {
+  height: 2.4rem;
+  margin-bottom: 0.6rem;
+  padding: 0 0.8rem;
+  font-size: 0.95rem;
+  color: var(--lg-text);
+  background: var(--lg-field) !important;
+  border: 0.5px solid var(--lg-field-border) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#login .input::placeholder {
+  color: var(--lg-text-2);
+}
+
+#login .input:focus {
+  outline: none;
+  border-color: var(--lg-accent) !important;
+  box-shadow: 0 0 0 3.5px color-mix(in srgb, var(--lg-accent) 30%, transparent) !important;
+}
+
+#login .button,
+#login input[type="submit"] {
+  height: 2.4rem;
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  background: var(--lg-accent) !important;
+  color: #fff;
+  border: 0;
+  border-radius: 8px !important;
+  box-shadow: 0 0.5px 1px rgb(0 0 0 / 15%) !important;
+  transform: none !important;
+  transition: filter 0.12s ease;
+}
+
+#login .button:hover {
+  box-shadow: 0 0.5px 1px rgb(0 0 0 / 15%) !important;
+}
+
+#login .button:active {
+  filter: brightness(0.88);
+}
+
+#login .button--flat,
+#login .or {
+  color: var(--lg-text-2);
+}
+
+#login .or::before,
+#login .or::after {
+  background-color: var(--lg-field-border);
+}
+
+#login .wrong-login,
+#login .wrong {
+  color: #ff3b30;
+  font-size: 0.85rem;
+}
